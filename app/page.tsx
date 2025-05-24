@@ -1,10 +1,10 @@
 'use client'
 
 import { useState } from 'react'
-import Header from '@/components/Header'
-import ContentInput from '@/components/ContentInput'
-import ShareResult from '@/components/ShareResult'
-import Footer from '@/components/Footer'
+import Header from '../components/Header'
+import ContentInput from '../components/ContentInput'
+import ShareResult from '../components/ShareResult'
+import Footer from '../components/Footer'
 
 export default function Home() {
   const [shareResult, setShareResult] = useState<{
