@@ -74,7 +74,7 @@ export default function ContentInput({ onShareCreated }: ContentInputProps) {
       }
 
       const result = {
-        url: `https://tempshare.com/s/${Math.random().toString(36).substring(2, 15)}`,
+        url: `${window.location.origin}/share/${Math.random().toString(36).substring(2, 15)}`,
         qrCode: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgZmlsbD0iIzAwMCIvPjx0ZXh0IHg9IjEwMCIgeT0iMTAwIiBmaWxsPSIjZmZmIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBkb21pbmFudC1iYXNlbGluZT0iY2VudHJhbCI+UVIgQ29kZTwvdGV4dD48L3N2Zz4=',
         expiresAt
       }
