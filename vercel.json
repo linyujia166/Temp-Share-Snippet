@@ -1,12 +1,17 @@
 {
-  "buildCommand": "npm run build",
-  "outputDirectory": ".next",
   "framework": "nextjs",
+  "buildCommand": "npm run build",
   "installCommand": "npm install",
   "regions": ["hkg1", "sin1"],
   "functions": {
-    "src/app/**": {
+    "app/**/*.{js,ts,jsx,tsx}": {
       "maxDuration": 30
     }
-  }
+  },
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "/"
+    }
+  ]
 }
