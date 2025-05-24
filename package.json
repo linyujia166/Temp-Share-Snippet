@@ -1,0 +1,54 @@
+{
+  "name": "temp-share-snippet",
+  "version": "1.0.0",
+  "description": "A web application for sharing temporary text snippets and files",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "export": "next export",
+    "deploy": "npm run build && npm run export"
+  },
+  "dependencies": {
+    "next": "14.0.4",
+    "react": "^18",
+    "react-dom": "^18",
+    "typescript": "^5",
+    "@types/node": "^20",
+    "@types/react": "^18",
+    "@types/react-dom": "^18",
+    "tailwindcss": "^3.3.0",
+    "autoprefixer": "^10.0.1",
+    "postcss": "^8",
+    "eslint": "^8",
+    "eslint-config-next": "14.0.4",
+    "firebase": "^10.7.1",
+    "next-i18next": "^15.2.0",
+    "react-i18next": "^13.5.0",
+    "react-dropzone": "^14.2.3",
+    "qrcode": "^1.5.3",
+    "react-qr-code": "^2.0.12",
+    "crypto-js": "^4.2.0",
+    "uuid": "^9.0.1",
+    "@types/uuid": "^9.0.7",
+    "@types/crypto-js": "^4.2.1",
+    "@types/qrcode": "^1.5.5"
+  },
+  "devDependencies": {
+    "@types/node": "^20",
+    "@types/react": "^18",
+    "@types/react-dom": "^18",
+    "autoprefixer": "^10.0.1",
+    "eslint": "^8",
+    "eslint-config-next": "14.0.4",
+    "postcss": "^8",
+    "tailwindcss": "^3.3.0",
+    "typescript": "^5"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=8.0.0"
+  }
+} 
