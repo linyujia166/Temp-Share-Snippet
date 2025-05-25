@@ -1,9 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { generateId, hashPassword, generateQRCode, calculateExpiryDate, isValidFileType } from '../../../lib/utils'
 import { CreateShareResponse } from '../../../lib/types'
-
-// 全局存储，用于在Firebase不可用时存储数据
-const globalShares = new Map<string, any>();
+import { setGlobalShare } from '../../../lib/global-storage'
 
 export async function POST(request: NextRequest) {
   try {
@@ -72,7 +70,7 @@ export async function POST(request: NextRequest) {
     }
 
     // 直接使用内存存储
-    globalShares.set(id, shareData)
+    setGlobalShare(id, shareData)
     console.log('📦 分享已保存到内存存储:', {
       id: shareData.id,
       type: shareData.type,
@@ -130,9 +128,4 @@ async function tryFirebaseStorage(shareData: any) {
     console.warn('Firebase存储失败:', error.message)
     // 不抛出错误，让主流程继续
   }
-}
-
-// 获取全局存储的函数（供其他API使用）
-export function getGlobalShares() {
-  return globalShares
 } 

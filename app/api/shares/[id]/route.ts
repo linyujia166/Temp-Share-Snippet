@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { verifyPassword } from '../../../../lib/utils'
 import { ShareContent } from '../../../../lib/types'
+import { hasGlobalShare, getGlobalShare, setGlobalShare } from '../../../../lib/global-storage'
 
 // 模拟演示数据
 const demoShares: { [key: string]: ShareContent } = {
@@ -15,16 +16,6 @@ const demoShares: { [key: string]: ShareContent } = {
   }
 }
 
-// 获取全局存储的函数
-async function getGlobalShares(): Promise<Map<string, any> | null> {
-  try {
-    const { getGlobalShares } = await import('../route')
-    return getGlobalShares()
-  } catch {
-    return null
-  }
-}
-
 export async function GET(
   request: NextRequest,
   { params }: { params: { id: string } }
@@ -35,11 +26,10 @@ export async function GET(
     const password = url.searchParams.get('password')
 
     let shareData: ShareContent | null = null
-    const globalShares = await getGlobalShares()
 
     // 1. 首先从内存存储中查找
-    if (globalShares && globalShares.has(id)) {
-      shareData = globalShares.get(id) as ShareContent
+    if (hasGlobalShare(id)) {
+      shareData = getGlobalShare(id) as ShareContent
       console.log('✅ 从内存存储获取分享数据:', id)
     }
     // 2. 如果内存中没有，尝试演示数据
@@ -82,9 +72,9 @@ export async function GET(
     }
 
     // 增加访问次数（内存中）
-    if (globalShares && globalShares.has(id)) {
+    if (hasGlobalShare(id)) {
       const updatedData = { ...shareData, accessCount: shareData.accessCount + 1 }
-      globalShares.set(id, updatedData)
+      setGlobalShare(id, updatedData)
       shareData = updatedData
     }
 
