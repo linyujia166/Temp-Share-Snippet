@@ -6,6 +6,9 @@
   "functions": {
     "app/**/*.{js,ts,jsx,tsx}": {
       "maxDuration": 30
+    },
+    "app/api/**/*.ts": {
+      "maxDuration": 60
     }
   },
   "rewrites": [
@@ -13,5 +16,14 @@
       "source": "/(.*)",
       "destination": "/"
     }
-  ]
+  ],
+  "crons": [
+    {
+      "path": "/api/cleanup",
+      "schedule": "0 2 * * *"
+    }
+  ],
+  "env": {
+    "NEXT_PUBLIC_APP_URL": "https://temp-share-snippet.vercel.app"
+  }
 }

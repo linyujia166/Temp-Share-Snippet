@@ -17,12 +17,48 @@ const nextConfig = {
   
   // ESLint 配置
   eslint: {
-    ignoreDuringBuilds: false,
+    dirs: ['app', 'components', 'lib'],
   },
   
   // TypeScript 配置
   typescript: {
     ignoreBuildErrors: false,
+  },
+
+  experimental: {
+    serverComponentsExternalPackages: ['undici']
+  },
+
+  webpack: (config, { buildId, dev, isServer, defaultLoaders, webpack }) => {
+    if (!isServer) {
+      config.resolve.fallback = {
+        ...config.resolve.fallback,
+        fs: false,
+        net: false,
+        tls: false,
+        crypto: false,
+      }
+    }
+    return config
+  },
+
+  env: {
+    customKey: 'my-value',
+  },
+
+  redirects: async () => {
+    return [
+      {
+        source: '/terms-of-service',
+        destination: '/terms',
+        permanent: true,
+      },
+      {
+        source: '/privacy-policy', 
+        destination: '/privacy',
+        permanent: true,
+      },
+    ]
   },
 };
 

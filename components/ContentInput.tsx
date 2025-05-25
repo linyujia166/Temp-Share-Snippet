@@ -13,10 +13,10 @@ interface ContentInputProps {
 
 const EXPIRY_OPTIONS = [
   { label: '10分钟', value: 10, unit: 'minutes' },
-  { label: '1小时', value: 1, unit: 'hours' },
-  { label: '24小时', value: 24, unit: 'hours' },
-  { label: '7天', value: 7, unit: 'days' },
-  { label: '30天', value: 30, unit: 'days' },
+  { label: '1小时', value: 60, unit: 'minutes' },
+  { label: '24小时', value: 1440, unit: 'minutes' },
+  { label: '7天', value: 10080, unit: 'minutes' },
+  { label: '30天', value: 43200, unit: 'minutes' },
 ]
 
 export default function ContentInput({ onShareCreated }: ContentInputProps) {
@@ -61,28 +61,46 @@ export default function ContentInput({ onShareCreated }: ContentInputProps) {
     setIsLoading(true)
 
     try {
-      // 模拟 API 调用
-      await new Promise(resolve => setTimeout(resolve, 2000))
+      const formData = new FormData()
+      formData.append('type', activeTab)
+      formData.append('expiryMinutes', expiryOption.value.toString())
       
-      const expiresAt = new Date()
-      if (expiryOption.unit === 'minutes') {
-        expiresAt.setMinutes(expiresAt.getMinutes() + expiryOption.value)
-      } else if (expiryOption.unit === 'hours') {
-        expiresAt.setHours(expiresAt.getHours() + expiryOption.value)
-      } else if (expiryOption.unit === 'days') {
-        expiresAt.setDate(expiresAt.getDate() + expiryOption.value)
+      if (activeTab === 'text') {
+        formData.append('content', textContent)
+      } else if (uploadedFile) {
+        formData.append('file', uploadedFile)
+      }
+      
+      if (password.trim()) {
+        formData.append('password', password.trim())
       }
 
-      const result = {
-        url: `${window.location.origin}/share/${Math.random().toString(36).substring(2, 15)}`,
-        qrCode: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgZmlsbD0iIzAwMCIvPjx0ZXh0IHg9IjEwMCIgeT0iMTAwIiBmaWxsPSIjZmZmIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBkb21pbmFudC1iYXNlbGluZT0iY2VudHJhbCI+UVIgQ29kZTwvdGV4dD48L3N2Zz4=',
-        expiresAt
+      const response = await fetch('/api/shares', {
+        method: 'POST',
+        body: formData
+      })
+
+      if (!response.ok) {
+        const errorData = await response.json()
+        throw new Error(errorData.error || '创建分享失败')
       }
 
-      onShareCreated(result)
+      const result = await response.json()
+      
+      onShareCreated({
+        url: result.url,
+        qrCode: result.qrCode,
+        expiresAt: new Date(result.expiresAt)
+      })
+
+      // 重置表单
+      setTextContent('')
+      setUploadedFile(null)
+      setPassword('')
+      setActiveTab('text')
     } catch (error) {
       console.error('创建分享失败:', error)
-      alert('创建分享失败，请重试')
+      alert(error instanceof Error ? error.message : '创建分享失败，请重试')
     } finally {
       setIsLoading(false)
     }
