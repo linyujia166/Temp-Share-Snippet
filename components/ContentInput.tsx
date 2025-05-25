@@ -80,12 +80,23 @@ export default function ContentInput({ onShareCreated }: ContentInputProps) {
         body: formData
       })
 
-      if (!response.ok) {
-        const errorData = await response.json()
-        throw new Error(errorData.error || '创建分享失败')
+      let result
+      try {
+        result = await response.json()
+      } catch (parseError) {
+        // 如果无法解析JSON，可能是收到了HTML错误页面
+        const text = await response.text()
+        console.error('非JSON响应:', text)
+        throw new Error('服务器返回了无效的响应格式，请刷新页面重试')
       }
 
-      const result = await response.json()
+      if (!response.ok) {
+        // 处理业务错误（如文件上传限制等）
+        if (result.message && result.suggestion) {
+          throw new Error(`${result.error}\n\n${result.message}\n建议：${result.suggestion}`)
+        }
+        throw new Error(result.error || '创建分享失败')
+      }
       
       onShareCreated({
         url: result.url,
@@ -100,7 +111,16 @@ export default function ContentInput({ onShareCreated }: ContentInputProps) {
       setActiveTab('text')
     } catch (error) {
       console.error('创建分享失败:', error)
-      alert(error instanceof Error ? error.message : '创建分享失败，请重试')
+      let errorMessage = '创建分享失败，请重试'
+      
+      if (error instanceof Error) {
+        errorMessage = error.message
+      } else if (typeof error === 'string') {
+        errorMessage = error
+      }
+      
+      // 使用更友好的错误提示
+      alert(errorMessage)
     } finally {
       setIsLoading(false)
     }

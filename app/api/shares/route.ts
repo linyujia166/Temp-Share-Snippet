@@ -56,13 +56,25 @@ export async function POST(request: NextRequest) {
         return NextResponse.json({ error: '不支持的文件类型' }, { status: 400 })
       }
 
-      // 文件分享 - 直接使用fallback模式
+      // 检查是否是生产环境
+      const isProduction = process.env.NODE_ENV === 'production'
+      
+      if (isProduction) {
+        // 在生产环境中，文件上传需要配置云存储
+        return NextResponse.json({ 
+          error: '文件上传功能需要配置云存储服务',
+          message: '请使用文本分享功能，或联系管理员配置文件存储功能',
+          suggestion: '您可以将文件内容复制粘贴到文本分享中'
+        }, { status: 503 })
+      }
+
+      // 文件分享 - 仅在开发环境中可用
       shareData.fileName = file.name
       shareData.fileSize = file.size
       shareData.fileType = file.type
       shareData.fileUrl = `${baseUrl}/api/files/${id}/${encodeURIComponent(file.name)}`
       
-      console.log('📁 文件分享（fallback模式）:', {
+      console.log('📁 文件分享（开发模式）:', {
         fileName: file.name,
         fileSize: file.size,
         fileType: file.type
