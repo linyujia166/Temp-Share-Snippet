@@ -132,5 +132,7 @@ async function tryFirebaseStorage(shareData: any) {
   }
 }
 
-// 导出全局存储以供其他API使用
-export { globalShares } 
+// 获取全局存储的函数（供其他API使用）
+export function getGlobalShares() {
+  return globalShares
+} 

@@ -18,8 +18,8 @@ const demoShares: { [key: string]: ShareContent } = {
 // 获取全局存储的函数
 async function getGlobalShares(): Promise<Map<string, any> | null> {
   try {
-    const { globalShares } = await import('../route')
-    return globalShares
+    const { getGlobalShares } = await import('../route')
+    return getGlobalShares()
   } catch {
     return null
   }

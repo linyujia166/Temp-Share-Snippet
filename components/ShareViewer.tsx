@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 
 interface ShareData {
   id: string
@@ -51,7 +51,7 @@ export default function ShareViewer({ shareId }: ShareViewerProps) {
     return '即将过期'
   }
 
-  const loadShareData = async (passwordParam?: string) => {
+  const loadShareData = useCallback(async (passwordParam?: string) => {
     try {
       setError('')
       const url = passwordParam 
@@ -74,7 +74,7 @@ export default function ShareViewer({ shareId }: ShareViewerProps) {
     } finally {
       setIsLoading(false)
     }
-  }
+  }, [shareId])
 
   const handlePasswordSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -87,7 +87,7 @@ export default function ShareViewer({ shareId }: ShareViewerProps) {
 
   useEffect(() => {
     loadShareData()
-  }, [shareId])
+  }, [loadShareData])
 
   if (isLoading) {
     return (
